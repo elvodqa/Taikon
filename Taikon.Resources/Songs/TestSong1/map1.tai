@@ -1,0 +1,38 @@
+Audio: audio.mp3
+Song: Test Song
+Artist: Test Artist
+Creator: elmo
+BPM: 100
+
+[Objects]
+// How objects work?
+// So normally every line only has a double value representing the time of the object.
+// Properties are defined by using spesific number
+// -1 To make the next objects Red note (Don) 
+// -2 To make the next objects Blue note (Kat)
+// -3 To make the next objects Big Red note
+// -4 To make the next objects Big Blue note
+
+// normal objects are defined by milisecond timing
+// 134  is an object at 134 milisecond
+// 100, 3000 is a drumroll between 100 and 3000 miliseconds.
+// Drumrolls are not affected by negative values. But the drumroll will be affected by the BPM value.
+
+// BPM value can be changed between objects.
+// It can be defined by using double hpyhen (--) and the BPM value and time
+// -- 120 1000 is a BPM value of 120 at 1000 milisecond
+100
+300
+500
+600, 1000
+-- 120 1000
+1000
+-1
+1200
+-2
+1500
+-3
+2000
+-4
+2500
+

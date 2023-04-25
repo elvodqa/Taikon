@@ -1,3 +1,2 @@
-﻿
-using var game = new Taikon.Game1();
+﻿using var game = new Taikon.Game1();
 game.Run();
