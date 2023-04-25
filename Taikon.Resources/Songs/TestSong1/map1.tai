@@ -20,12 +20,12 @@ BPM: 100
 
 // BPM value can be changed between objects.
 // It can be defined by using double hpyhen (--) and the BPM value and time
-// -- 120 1000 is a BPM value of 120 at 1000 milisecond
+// -- 120, 1000 is a BPM value of 120 at 1000 milisecond
 100
 300
 500
 600, 1000
--- 120 1000
+-- 120, 1000
 1000
 -1
 1200
