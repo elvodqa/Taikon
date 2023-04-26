@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace Taikon;
@@ -84,6 +85,11 @@ public class Input
     public static bool IsRightMouseReleased()
     {
         return currentMouseState.RightButton == ButtonState.Released && previousMouseState.RightButton != ButtonState.Released;
+    }
+    
+    public static bool IsMouseHoveringOver(Rectangle rect)
+    {
+        return rect.Contains(currentMouseState.Position);
     }
 }
 
