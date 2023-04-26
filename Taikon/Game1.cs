@@ -6,6 +6,7 @@ using ManagedBass;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Taikon.Audio;
 using Taikon.Graphics;
 
 namespace Taikon;
@@ -15,6 +16,8 @@ public class Game1 : Game
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     private FontSystem _fontSystem;
+
+    private SongPlayer _songPlayer;
 
     private string _mapSong;
     private string _mapArtist;
@@ -54,10 +57,9 @@ public class Game1 : Game
 
     protected override void Initialize()
     {
-        if (!Bass.Init())
-        {
-            throw new Exception("Bass failed to initialize!");
-        }
+        _songPlayer = new();
+        _songPlayer.Load("./Songs/TestSong1/ferrari-halloween.mp3");
+        _songPlayer.Play();
         base.Initialize();
     }
 
@@ -70,7 +72,7 @@ public class Game1 : Game
         _hitAreaCirleTexture = Primitives.CreateCircleWithOutline(GraphicsDevice, _hitObjectRadius+5, 15);
         
         _mapObjects = ReadMapFile(_mapFile);
-        PlaySong("Songs/TestSong1/ferrari-halloween.mp3");
+        
     }
 
     protected override void Update(GameTime gameTime)
@@ -100,7 +102,7 @@ public class Game1 : Game
         _spriteBatch.DrawString(font18, "BPM: " + _currentMapBpm, new Vector2(10, 70), Color.White);
         _spriteBatch.DrawString(font18, "Audio: " + _mapAudioFile, new Vector2(10, 90), Color.White);
         _spriteBatch.DrawString(font18, "MapTime: " + _currentMapTime, new Vector2(10, 110), Color.White);
-        _spriteBatch.DrawString(font18, "SongTime: " + SongPosition, new Vector2(10, 130), Color.White);
+        _spriteBatch.DrawString(font18, "SongTime: " + _songPlayer.GetPosition(), new Vector2(10, 130), Color.White);
         
         _spriteBatch.Draw(
             _hitAreaCirleTexture, 
@@ -113,37 +115,6 @@ public class Game1 : Game
         
 
         base.Draw(gameTime);
-    }
-    
-    private void PlaySong(string audioFile)
-    {
-        _songStreamHandle = Bass.CreateStream(audioFile);
-        Bass.ChannelPlay(_songStreamHandle);
-    }
-    
-    private void StopSong()
-    {
-        Bass.Stop();
-    }
-    
-    private void PauseSong()
-    {
-        Bass.Pause();
-    }
-    
-    private void ResumeSong()
-    {
-        Bass.Start();
-    }
-    
-    private long SongPosition
-    {
-        get
-        {
-            return Bass.ChannelGetPosition(_songStreamHandle);
-        }
-        set => Bass.ChannelSetPosition(_songStreamHandle, value);
-        
     }
 
     private List<string> ReadMapFile(string mapFile)
