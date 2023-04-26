@@ -78,6 +78,8 @@ public class Game1 : Game
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
         Window.AllowUserResizing = true;
+        Window.ClientSizeChanged += OnResize;
+        
     }
 
     protected override void Initialize()
@@ -116,7 +118,7 @@ public class Game1 : Game
         {
             _dontRotation += 0.05f * (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             // Play
-            if (Input.IsMouseHoveringOver(new Rectangle(10, Window.ClientBounds.Height - 10 - _mainMenuPlayTexture.Height - 10 - _mainMenuEditorTexture.Height - 10 - _mainMenuSettingsTexture.Height - 80, _mainMenuPlayTexture.Width, _mainMenuPlayTexture.Height)))
+            if (Input.IsMouseHoveringOver(new Rectangle(10, Window.ClientBounds.Height - 10 - _mainMenuPlayTexture.Height - 10 - _mainMenuEditorTexture.Height - 10 - _mainMenuSettingsTexture.Height - 80, _mainMenuPlayTexture.Width, _mainMenuPlayTexture.Height), this))
             {
                 _onHoverMovePlay = 30;
                 if (!_isHoveringPlay)
@@ -130,7 +132,7 @@ public class Game1 : Game
                 }
             }
             // Editor
-            else if (Input.IsMouseHoveringOver(new Rectangle(10, Window.ClientBounds.Height - 10 - _mainMenuPlayTexture.Height - 10 - _mainMenuEditorTexture.Height - 80, _mainMenuEditorTexture.Width, _mainMenuEditorTexture.Height)))
+            else if (Input.IsMouseHoveringOver(new Rectangle(10, Window.ClientBounds.Height - 10 - _mainMenuPlayTexture.Height - 10 - _mainMenuEditorTexture.Height - 80, _mainMenuEditorTexture.Width, _mainMenuEditorTexture.Height), this))
             {
                 _onHoverMoveEditor = 30;
                 if (!_isHoveringPlay)
@@ -144,7 +146,7 @@ public class Game1 : Game
                 }
             }
             // Settings
-            else if (Input.IsMouseHoveringOver(new Rectangle(10, Window.ClientBounds.Height - 10 - _mainMenuPlayTexture.Height - 80, _mainMenuSettingsTexture.Width, _mainMenuSettingsTexture.Height)))
+            else if (Input.IsMouseHoveringOver(new Rectangle(10, Window.ClientBounds.Height - 10 - _mainMenuPlayTexture.Height - 80, _mainMenuSettingsTexture.Width, _mainMenuSettingsTexture.Height), this))
             {
                 _onHoverMoveSettings = 30;
                 if (!_isHoveringPlay)
@@ -296,5 +298,19 @@ public class Game1 : Game
         }
 
         return objects;
+    }
+    
+    private void OnResize(object sender, EventArgs e)
+    {
+        if (Window.ClientBounds.Width < 800)
+        {
+            _graphics.PreferredBackBufferWidth = 800;
+            _graphics.ApplyChanges();
+        }
+        if (Window.ClientBounds.Height < 600)
+        {
+            _graphics.PreferredBackBufferHeight = 600;
+            _graphics.ApplyChanges();
+        }
     }
 }

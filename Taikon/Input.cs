@@ -87,8 +87,10 @@ public class Input
         return currentMouseState.RightButton == ButtonState.Released && previousMouseState.RightButton != ButtonState.Released;
     }
     
-    public static bool IsMouseHoveringOver(Rectangle rect)
+    public static bool IsMouseHoveringOver(Rectangle rect, Game1 game)
     {
+        // if window is not in focus, return false
+        if (!game.IsActive) return false;
         return rect.Contains(currentMouseState.Position);
     }
 }
