@@ -5,6 +5,7 @@ using FontStashSharp;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Taikon.Graphics;
 
 namespace Taikon;
 
@@ -25,6 +26,17 @@ public class Game1 : Game
     private double _currentMapLength;
     private double _currentMapTime = 0;
     private bool _isPlaying = true;
+    
+    private Texture2D _hitAreaCirleTexture;
+    
+    private Texture2D _hitObjectDonTexture;
+    private Texture2D _hitObjectKaTexture;
+    private int _hitObjectRadius = 165;
+    
+    private Texture2D _hitObjectDonBigTexture;
+    private Texture2D _hitObjectKaBigTexture;
+    private int _hitObjectBigRadius = 180;
+    
 
     public Game1()
     {
@@ -48,6 +60,8 @@ public class Game1 : Game
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         _fontSystem = new();
         _fontSystem.AddFont(File.ReadAllBytes("./Fonts/arial.ttf"));
+
+        _hitAreaCirleTexture = Primitives.CreateCircleWithOutline(GraphicsDevice, _hitObjectRadius+5, 15);
 
         _mapObjects = ReadMapFile(_mapFile);
     }
@@ -79,6 +93,14 @@ public class Game1 : Game
         _spriteBatch.DrawString(font18, "BPM: " + _currentMapBpm, new Vector2(10, 70), Color.White);
         _spriteBatch.DrawString(font18, "Audio: " + _mapAudioFile, new Vector2(10, 90), Color.White);
         _spriteBatch.DrawString(font18, "Time: " + _currentMapTime, new Vector2(10, 110), Color.White);
+        
+        _spriteBatch.Draw(
+            _hitAreaCirleTexture, 
+            new Vector2(_hitObjectRadius+5, Window.ClientBounds.Height/2), 
+            null, Color.White, 0f, 
+            new Vector2((_hitObjectRadius+5)/2, (_hitObjectRadius+5)/2), 
+            1f, SpriteEffects.None, 0f);
+        
         _spriteBatch.End();
         
 
