@@ -98,13 +98,14 @@ public class Game1 : Game
         var random = new Random();
         int index = random.Next(Maps.Count);
         SelectedMap = Maps[index];
-        Console.WriteLine(SelectedMap.SubMaps.Count);
+       
         int subIndex = random.Next(SelectedMap.SubMaps.Count);
         SelectedSubMap = SelectedMap.SubMaps[subIndex];
 
         _songPlayer.Load($"{SelectedMap.FolderName}/{SelectedSubMap.AudioFile}");
         _songPlayer.SetVolume(0.1f);
         _songPlayer.Play();
+        Console.WriteLine("[Game] Init done.");
         base.Initialize();
     }
 
@@ -131,6 +132,7 @@ public class Game1 : Game
 
     protected override void Update(GameTime gameTime)
     {
+        var delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
         Input.GetKeyboardState();
         Input.GetMouseState();
 
@@ -277,7 +279,7 @@ public class Game1 : Game
             {
                 if (_settingsAnimCurrent != _settingsAnimFinal)
                 {
-                    _settingsAnimCurrent += 50;
+                    _settingsAnimCurrent += 1000 * delta;
                 }
 
                 if (_settingsAnimCurrent >= _settingsAnimFinal)
@@ -404,5 +406,7 @@ public class Game1 : Game
             _graphics.PreferredBackBufferHeight = 600;
             _graphics.ApplyChanges();
         }
+        
+        Console.WriteLine($"[Window] Resized: {Window.ClientBounds.Width}x{Window.ClientBounds.Height}");
     }
 }
