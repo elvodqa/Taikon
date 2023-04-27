@@ -109,6 +109,30 @@ public class SongPlayer
         }
     }
 
+    public void SetVolume(double volume)
+    {
+        if (_streamHandle != 0)
+        {
+            Bass.ChannelSetAttribute(_streamHandle, ChannelAttribute.Volume, volume);
+        }
+        else
+        {
+            throw new Exception("No song loaded.");
+        }
+    }
+
+    public double GetVolume()
+    {
+        if (_streamHandle != 0)
+        {
+            return Bass.ChannelGetAttribute(_streamHandle, ChannelAttribute.Volume);
+        }
+        else
+        {
+            throw new Exception("No song loaded.");
+        }
+    }
+
     public long GetLength()
     {
         return _songLength;

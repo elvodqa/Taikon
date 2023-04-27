@@ -3,6 +3,7 @@ Song: Test Song
 Artist: Test Artist
 Creator: elmo
 BPM: 100
+Background: bg.jpg
 
 [Objects]
 // How objects work?

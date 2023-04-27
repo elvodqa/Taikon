@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Taikon.Audio;
+using Taikon.Core;
 using Taikon.Graphics;
 
 namespace Taikon;
@@ -68,6 +69,12 @@ public class Game1 : Game
     private Texture2D _donSplashTexture;
     private float _dontRotation = 0;
 
+    private List<Map> Maps = new();
+    private Map SelectedMap;
+    private SubMap SelectedSubMap;
+
+    private bool _focusedSettings = false;
+    private bool _isVolumeChancing = false;
 
     public Game1()
     {
@@ -85,7 +92,22 @@ public class Game1 : Game
     protected override void Initialize()
     {
         _songPlayer = new();
-        _mapObjects = ReadMapFile(_mapFile);
+        
+        foreach (var folder in Directory.GetDirectories("./Songs"))
+        {
+            Maps.Add(Map.ReadMaps(folder));
+        }
+        
+        var random = new Random();
+        int index = random.Next(Maps.Count);
+        SelectedMap = Maps[index];
+        Console.WriteLine(SelectedMap.SubMaps.Count);
+        int subIndex = random.Next(SelectedMap.SubMaps.Count);
+        SelectedSubMap = SelectedMap.SubMaps[subIndex];
+        
+        _songPlayer.Load($"{SelectedMap.FolderName}/{SelectedSubMap.AudioFile}");
+        _songPlayer.SetVolume(0.8f);
+        _songPlayer.Play();
         base.Initialize();
     }
 
@@ -166,6 +188,41 @@ public class Game1 : Game
                 _onHoverMoveSettings = 0;
                 _isHoveringPlay = false;
             }
+
+            if (Input.IsKeyPressed(Keys.LeftControl, false))
+            {
+                if (Input.IsScrolled(Orientation.Down))
+                {
+                    _isVolumeChancing = true;
+                    if (_songPlayer.GetVolume() - 0.05f < 0)
+                    {
+                        _songPlayer.SetVolume(0);
+                    }
+                    else
+                    {
+                        _songPlayer.SetVolume(_songPlayer.GetVolume()-0.05f);
+                    }
+                    
+                }
+                else if (Input.IsScrolled(Orientation.Up))
+                {
+                    _isVolumeChancing = true;
+                    if (_songPlayer.GetVolume() + 0.05f > 1)
+                    {
+                        _songPlayer.SetVolume(1);
+                    }
+                    else
+                    {
+                        _songPlayer.SetVolume(_songPlayer.GetVolume()+0.05f);
+                    }
+                    
+                }
+                else
+                {
+                    _isVolumeChancing = false;
+                }
+            }
+            
         }
             break;
         case GameState.SongSelect:
@@ -209,6 +266,12 @@ public class Game1 : Game
                 
                 // Don splash rotating at the middle
                 _spriteBatch.Draw(_donSplashTexture, new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2), null, Color.White, MathHelper.ToRadians(_dontRotation), new Vector2(_donSplashTexture.Width / 2, _donSplashTexture.Height / 2), 0.5f, SpriteEffects.None, 0f);
+
+                if (_isVolumeChancing)
+                {
+                    var vol = _songPlayer.GetVolume() * 100;
+                    _spriteBatch.DrawString(font18, $"Vol:{vol}", new(0, Window.ClientBounds.Height-20), Color.White);
+                }
                 
                 _spriteBatch.End();
             }
@@ -251,55 +314,6 @@ public class Game1 : Game
         base.Draw(gameTime);
     }
 
-    private List<string> ReadMapFile(string mapFile)
-    {
-        List<string> objects = new();
-        string[] lines = File.ReadAllLines(mapFile);
-        bool objectsStarted = false;
-        foreach (var line in lines)
-        {
-            if (line == "")
-                continue;
-            if (line.StartsWith("//"))
-                continue;
-            if (line.StartsWith("["))
-            {
-                if (line == "[Objects]")
-                    objectsStarted = true;
-                continue;
-            }
-
-            if (!objectsStarted)
-            {
-                var split = line.Split(":");
-                switch (split[0])
-                {
-                    case "Song":
-                        _mapSong = split[1].Trim();
-                        break;
-                    case "Artist":
-                        _mapArtist = split[1].Trim();
-                        break;
-                    case "Creator":
-                        _mapCreator = split[1].Trim();
-                        break;
-                    case "Audio":
-                        _mapAudioFile = split[1].Trim();
-                        break;
-                    case "BPM":
-                        _currentMapBpm = int.Parse(split[1].Trim());
-                        break;
-                }
-            }
-            else
-            {
-                objects.Add(line);
-            }
-        }
-
-        return objects;
-    }
-    
     private void OnResize(object sender, EventArgs e)
     {
         if (Window.ClientBounds.Width < 800)
