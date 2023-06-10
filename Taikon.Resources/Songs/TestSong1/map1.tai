@@ -1,9 +1,14 @@
+[Metadata]
 Audio: ferrari-halloween.mp3
 Song: Test Song
 Artist: Test Artist
 Creator: elmo
 BPM: 100
 Background: bg.jpg
+
+[Timing]
+1000, 120 
+// This is a BPM change to 120 at 1000 milisecond 
 
 [Objects]
 // How objects work?
@@ -14,27 +19,15 @@ Background: bg.jpg
 // -3 To make the next objects Big Red note
 // -4 To make the next objects Big Blue note
 
-// normal objects are defined by milisecond timing
-// 134  is an object at 134 milisecond
-// 100, 3000 is a drumroll between 100 and 3000 miliseconds.
-// Drumrolls are not affected by negative values. But the drumroll will be affected by the BPM value.
-
-// BPM value can be changed between objects.
-// It can be defined by using double hpyhen (--) and the BPM value and time
 // -- 120, 1000 is a BPM value of 120 at 1000 milisecond
-100
-300
-500
-600, 1000
--- 120, 1000
-1000
--1
+100, -1 
+300, -2 
+500, -3 
+600-1000
+1000, -4
 1200
 1234
--2
 1500
--3
 2000
--4
 2500
 
